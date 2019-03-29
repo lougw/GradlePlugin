@@ -13,7 +13,7 @@ repositories {
 }
 //
 //设置maven deployer
-//deployeruploadArchives {
+//uploadArchives {
 //    repositories {
 //        mavenDeployer {
 //            //设置插件的GAV参数
