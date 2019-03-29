@@ -3,33 +3,33 @@ apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'com.novoda.bintray-release'
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
-    compile 'org.aspectj:aspectjtools:1.8.9'
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'org.aspectj:aspectjtools:1.8.9'
 }
 
 repositories {
     mavenCentral()
 }
 //
-////设置maven deployer
-//uploadArchives {
+//设置maven deployer
+//deployeruploadArchives {
 //    repositories {
 //        mavenDeployer {
 //            //设置插件的GAV参数
 //            pom.groupId = 'com.lougw.buildplugin'
 //            pom.artifactId = 'buildplugin'
-//            pom.version = 1.0
+//            pom.version = 3.0
 //            //文件发布到下面目录
 //            repository(url: uri('../release'))
 //        }
 //    }
 //}
 publish {
-    userOrg = '' //bintray注册的用户名（不是邮箱）
+    userOrg = 'gaoweilou' //bintray注册的用户名（不是邮箱）
     groupId = 'com.lougw.buildplugin'
     artifactId = 'buildplugin' //项目名称
-    publishVersion = '2.0' //版本号
+    publishVersion = '9.0' //版本号
     desc = '' //项目描述。可空。
     website = '' //项目地址，一般填github地址。可空。
 }

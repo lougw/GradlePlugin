@@ -11,7 +11,8 @@ class BuildPlugin implements Plugin<Project> {
 
     void apply(Project project) {
         project.dependencies {
-            compile 'org.aspectj:aspectjrt:1.8.9'
+            api 'org.aspectj:aspectjrt:1.8.9'
+
         }
         println "hello, this is build plugin!";
         final def log = project.logger
@@ -20,7 +21,7 @@ class BuildPlugin implements Plugin<Project> {
             def javaCompile = variant.javaCompile
             javaCompile.doLast {
                 String[] args = ["-showWeaveInfo",
-                                 "-1.5",
+                                 "-1.8",
                                  "-inpath", javaCompile.destinationDir.toString(),
                                  "-aspectpath", javaCompile.classpath.asPath,
                                  "-d", javaCompile.destinationDir.toString(),
