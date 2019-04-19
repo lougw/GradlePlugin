@@ -6,8 +6,14 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
+import android.view.View;
 
 import com.lougw.aop.db.StopWatchDataBaseIml;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.reflect.MethodSignature;
 
 
 /**
@@ -99,5 +105,70 @@ public class AOPUtil {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    public void aroundMethodExecution(final ProceedingJoinPoint joinPoint) {
+        try {
+            MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+            String className = methodSignature.getDeclaringType().getSimpleName();
+            String methodName = methodSignature.getName();
+            final StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
+            joinPoint.proceed();
+            stopWatch.stop();
+            stopWatch.setClassName(className);
+            stopWatch.setMethodName(methodName);
+            if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+                AOPUtil.getInstance().save(stopWatch);
+            }
+            Log.d(TAG, buildLogMessage(className, methodName, stopWatch.getTotalTimeMillis()));
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+
+    }
+
+    private String buildLogMessage(String className, String methodName, long methodDuration) {
+        StringBuilder message = new StringBuilder();
+        message.append(" --> ");
+        message.append(className);
+        message.append(" --> ");
+        message.append(methodName);
+        message.append(" --> ");
+        message.append("[  ");
+        message.append(methodDuration);
+        message.append("ms");
+        message.append("  ]");
+        return message.toString();
+    }
+
+    public void onClickMethodExecution(final JoinPoint joinPoint) throws Throwable {
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        String className = methodSignature.getDeclaringType().getSimpleName();
+        String methodName = methodSignature.getName();
+        String viewId = "";
+
+        if (joinPoint != null && joinPoint.getArgs() != null) {
+            for (int i = 0; i < joinPoint.getArgs().length; i++) {
+                Object obj = joinPoint.getArgs()[i];
+                if (obj != null && obj instanceof View) {
+                    viewId = AOPUtil.getResourceEntryName(((View) obj).getId());
+                }
+            }
+        }
+        Log.d(TAG, buildLogMessage(className, methodName, viewId));
+    }
+
+
+    private String buildLogMessage(String className, String methodName, String viewId) {
+        StringBuilder message = new StringBuilder();
+        message.append(" --> ");
+        message.append(className);
+        message.append(" --> ");
+        message.append(methodName);
+        message.append(" --> ");
+        message.append(" viewId --> ");
+        message.append(viewId);
+        return message.toString();
     }
 }
