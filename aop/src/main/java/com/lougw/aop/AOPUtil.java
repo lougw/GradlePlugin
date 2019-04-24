@@ -88,6 +88,7 @@ public class AOPUtil {
 
     /**
      * 获取资源
+     *  @return Resources
      */
     public static Resources getResources() {
         return mContext.getResources();
@@ -96,8 +97,8 @@ public class AOPUtil {
     /**
      * 跟距id獲得字符串
      *
-     * @param resId
-     * @return
+     * @param resId name
+     * @return name
      */
     public static String getResourceEntryName(int resId) {
         try {

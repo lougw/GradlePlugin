@@ -11,7 +11,7 @@ import com.lougw.aop.StopWatch;
 
 
 /**
- * <b>单列模式的数据库操作类
+ * <b>单列模式的数据库操作类</b>
  */
 public class StopWatchDataBaseIml implements StopWatchDataBase {
     private StopWatchDBHelper helper;
