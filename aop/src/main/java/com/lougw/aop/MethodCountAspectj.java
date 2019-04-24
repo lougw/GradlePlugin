@@ -36,7 +36,7 @@ public class MethodCountAspectj {
 
     @Around("invokeMethod() && !invokeWatch() && !invokeContentValues() && !invokeCanvas() && !invokePlayIndicator()")
     public void aroundMethodExecution(final ProceedingJoinPoint joinPoint) {
-        AOPUtil.getInstance().aroundMethodExecution(joinPoint);
+        AOPUtil.getInstance().aroundMethodExecution(joinPoint,true);
     }
 
 }

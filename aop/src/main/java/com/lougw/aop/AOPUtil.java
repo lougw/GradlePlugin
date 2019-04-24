@@ -107,7 +107,7 @@ public class AOPUtil {
         }
     }
 
-    public void aroundMethodExecution(final ProceedingJoinPoint joinPoint) {
+    public void aroundMethodExecution(final ProceedingJoinPoint joinPoint,boolean main) {
         try {
             MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
             String className = methodSignature.getDeclaringType().getSimpleName();
@@ -118,7 +118,7 @@ public class AOPUtil {
             stopWatch.stop();
             stopWatch.setClassName(className);
             stopWatch.setMethodName(methodName);
-            if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+            if (Thread.currentThread() == Looper.getMainLooper().getThread() || !main) {
                 AOPUtil.getInstance().save(stopWatch);
             }
             Log.d(TAG, buildLogMessage(className, methodName, stopWatch.getTotalTimeMillis()));
