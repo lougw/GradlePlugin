@@ -88,7 +88,8 @@ public class AOPUtil {
 
     /**
      * 获取资源
-     *  @return Resources
+     *
+     * @return Resources
      */
     public static Resources getResources() {
         return mContext.getResources();
@@ -108,7 +109,7 @@ public class AOPUtil {
         }
     }
 
-    public void aroundMethodExecution(final ProceedingJoinPoint joinPoint,boolean main) {
+    public void aroundMethodExecution(final ProceedingJoinPoint joinPoint, boolean main) {
         try {
             MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
             String className = methodSignature.getDeclaringType().getSimpleName();
@@ -170,6 +171,27 @@ public class AOPUtil {
         message.append(" --> ");
         message.append(" viewId --> ");
         message.append(viewId);
+        return message.toString();
+    }
+
+    public void onBeforeMethodExecution(final JoinPoint joinPoint) {
+        try {
+            MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+            String className = methodSignature.getDeclaringType().getSimpleName();
+            String methodName = methodSignature.getName();
+            Log.d(TAG, buildLogMessage(className, methodName));
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    private String buildLogMessage(String className, String methodName) {
+        StringBuilder message = new StringBuilder();
+        message.append(" --> ");
+        message.append(className);
+        message.append(" --> ");
+        message.append(methodName);
         return message.toString();
     }
 }

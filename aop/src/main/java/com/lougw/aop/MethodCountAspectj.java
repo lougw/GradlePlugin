@@ -1,8 +1,10 @@
 package com.lougw.aop;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 
 @Aspect
@@ -38,5 +40,11 @@ public class MethodCountAspectj {
     public void aroundMethodExecution(final ProceedingJoinPoint joinPoint) {
         AOPUtil.getInstance().aroundMethodExecution(joinPoint,true);
     }
+    @Before("invokeMethod() && !invokeWatch() && !invokeContentValues() && !invokeCanvas() && !invokePlayIndicator()")
+    public void beforeMethodExecution(final JoinPoint joinPoint) {
 
+        AOPUtil.getInstance().onBeforeMethodExecution(joinPoint);
+
+
+    }
 }
