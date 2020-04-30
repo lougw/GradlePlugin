@@ -17,39 +17,76 @@ class BuildPlugin implements Plugin<Project> {
         println "hello, this is build plugin!";
         final def log = project.logger
 
-        project.android.applicationVariants.all { variant ->
-            def javaCompile = variant.javaCompile
-            javaCompile.doLast {
-                String[] args = ["-showWeaveInfo",
-                                 "-1.8",
-                                 "-inpath", javaCompile.destinationDir.toString(),
-                                 "-aspectpath", javaCompile.classpath.asPath,
-                                 "-d", javaCompile.destinationDir.toString(),
-                                 "-classpath", javaCompile.classpath.asPath,
-                                 "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
-                log.debug "ajc args: " + Arrays.toString(args)
+        if (project.android.hasProperty('applicationVariants')) {
+
+            project.android.applicationVariants.all { variant ->
+                def javaCompile = variant.javaCompile
+                javaCompile.doLast {
+                    String[] args = ["-showWeaveInfo",
+                                     "-1.8",
+                                     "-inpath", javaCompile.destinationDir.toString(),
+                                     "-aspectpath", javaCompile.classpath.asPath,
+                                     "-d", javaCompile.destinationDir.toString(),
+                                     "-classpath", javaCompile.classpath.asPath,
+                                     "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
+                    log.debug "ajc args: " + Arrays.toString(args)
 
 
-                MessageHandler handler = new MessageHandler(true);
-                new Main().run(args, handler)
-                for (IMessage message : handler.getMessages(null, true)) {
-                    switch (message.getKind()) {
-                        case IMessage.ABORT:
-                        case IMessage.ERROR:
-                        case IMessage.FAIL:
-                            log.error message.message, message.thrown
-                            break;
-                        case IMessage.WARNING:
-                        case IMessage.INFO:
-                            log.info message.message, message.thrown
-                            break;
-                        case IMessage.DEBUG:
-                            log.debug message.message, message.thrown
-                            break;
+                    MessageHandler handler = new MessageHandler(true);
+                    new Main().run(args, handler)
+                    for (IMessage message : handler.getMessages(null, true)) {
+                        switch (message.getKind()) {
+                            case IMessage.ABORT:
+                            case IMessage.ERROR:
+                            case IMessage.FAIL:
+                                log.error message.message, message.thrown
+                                break;
+                            case IMessage.WARNING:
+                            case IMessage.INFO:
+                                log.info message.message, message.thrown
+                                break;
+                            case IMessage.DEBUG:
+                                log.debug message.message, message.thrown
+                                break;
+                        }
+                    }
+                }
+            }
+        } else {
+
+            project.android.libraryVariants.all { variant ->
+                def javaCompile = variant.javaCompile
+                javaCompile.doLast {
+                    String[] args = ["-showWeaveInfo",
+                                     "-1.8",
+                                     "-inpath", javaCompile.destinationDir.toString(),
+                                     "-aspectpath", javaCompile.classpath.asPath,
+                                     "-d", javaCompile.destinationDir.toString(),
+                                     "-classpath", javaCompile.classpath.asPath,
+                                     "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
+                    log.debug "ajc args: " + Arrays.toString(args)
+
+
+                    MessageHandler handler = new MessageHandler(true);
+                    new Main().run(args, handler)
+                    for (IMessage message : handler.getMessages(null, true)) {
+                        switch (message.getKind()) {
+                            case IMessage.ABORT:
+                            case IMessage.ERROR:
+                            case IMessage.FAIL:
+                                log.error message.message, message.thrown
+                                break;
+                            case IMessage.WARNING:
+                            case IMessage.INFO:
+                                log.info message.message, message.thrown
+                                break;
+                            case IMessage.DEBUG:
+                                log.debug message.message, message.thrown
+                                break;
+                        }
                     }
                 }
             }
         }
-
     }
 }
